@@ -1,17 +1,17 @@
 package main
 
 import (
-	"folk/proforma/core/entities/project"
+	"folk/proforma/core/actions/project"
+	"folk/proforma/core/model"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
-var projects []project.Project
+var projects []model.Project
 
 func main() {
-	projects = make([]project.Project, 0)
+	projects = make([]model.Project, 0)
 	// p := project.New("temp strip club")
 	// p.AddLocation(&location.Location{
 	// 	Address: location.Address{
@@ -39,16 +39,14 @@ func getProjects(c *gin.Context) {
 }
 
 func createProject(c *gin.Context) {
-	var newProject project.Project
+	newProject := project.New("")
 
 	if err := c.BindJSON(&newProject); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, err)
 		return
 	}
 
-	newProject.Id = uuid.New().String()
-
-	projects = append(projects, newProject)
+	projects = append(projects, *newProject)
 	c.IndentedJSON(http.StatusCreated, newProject)
 
 }
