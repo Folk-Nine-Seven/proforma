@@ -6,11 +6,25 @@ import (
 	"github.com/google/uuid"
 )
 
-func New(name string) *model.Project {
-	return &model.Project{
-		Id:   uuid.New().String(),
-		Name: name,
+type (
+	NewProjectInput struct {
+		Name      string           `json:"name" binding:"required"`
+		Tasks     []model.Task     `json:"tasks" binding:"dive"`
+		Locations []model.Location `json:"locations" binding:"dive"`
 	}
+)
+
+func New(input NewProjectInput) *model.Project {
+	return &model.Project{
+		Id:        uuid.New().String(),
+		Name:      input.Name,
+		Tasks:     input.Tasks,
+		Locations: input.Locations,
+	}
+}
+
+func Get(projectId string) model.Project {
+	return model.Project{}
 }
 
 func AddLocation(proj *model.Project, location *model.Location) {

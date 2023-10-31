@@ -16,6 +16,10 @@ func New(name string, address model.Address) *model.Location {
 	}
 }
 
-func ToString(location *model.Location) string {
+func Get(LocationId string) model.Location {
+	return model.Location{}
+}
+
+func String(location *model.Location) string {
 	return fmt.Sprintf("%s\n%s", location.Name, address.String(&location.Address))
 }

@@ -5,5 +5,6 @@ type (
 		Id        string     `json:"id"`
 		Name      string     `json:"name" binding:"required"`
 		Locations []Location `json:"locations" binding:"dive"`
+		Tasks     []Task     `json:"tasks" binding:"dive"`
 	}
 )
