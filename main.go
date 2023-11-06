@@ -98,7 +98,7 @@ func getOrganizations(c *gin.Context) {
 	// }
 	organizations, err := session.ExecuteWrite(c, func(transaction neo4j.ManagedTransaction) (any, error) {
 		cmd := `MATCH (o:Organization)
-		RETURN o.name`
+		RETURN o`
 		result, err := transaction.Run(c, cmd, nil)
 		if err != nil {
 			return nil, err
