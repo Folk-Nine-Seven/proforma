@@ -1,10 +1,10 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"folk/proforma/core/actions/organization"
 	"folk/proforma/database"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,17 +14,18 @@ import (
 var db *database.Neo4j
 
 func main() {
-	ctx := context.Background()
-	db = database.New(ctx)
-	db.Initialize(database.InitializeInput{
-		Uri:      "neo4j+s://1adaebe1.databases.neo4j.io:7687",
-		User:     "neo4j",
-		Password: "Zutnassi1qY7Ip1GTENC5l7TXTgbNYHJuayZydriLUU",
-	})
+	db, err := database.Instance()
+	if err != nil {
+		log.Fatal("no database connection")
+	}
 	defer db.Close()
 
 	r := gin.Default()
 	public := r.Group("/api")
+
+	public.GET("/", version)
+
+	public.GET("/organizations/:id", getOrganization)
 
 	public.GET("/organizations/:id/projects", getProjects)
 
@@ -37,9 +38,28 @@ func main() {
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
+func version(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, `v0.1`)
+}
+
 func getProjects(c *gin.Context) {
 	id := c.Param("id")
 	c.IndentedJSON(http.StatusNotFound, id)
+}
+
+func getOrganization(c *gin.Context) {
+	id := c.Param("id")
+	result, err := neo4j.ExecuteQuery(c, db.Driver,
+		fmt.Sprintf("MATCH (o:Organization WHERE o.id = '%s') RETURN o", id),
+		nil,
+		neo4j.EagerResultTransformer,
+		neo4j.ExecuteQueryWithDatabase("neo4j"))
+
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+	}
+
+	c.JSON(http.StatusOK, result.Records)
 }
 
 func createProject(c *gin.Context) {
@@ -62,7 +82,7 @@ func createProject(c *gin.Context) {
 
 func getOrganizations(c *gin.Context) {
 	result, err := neo4j.ExecuteQuery(c, db.Driver,
-		"MATCH (o:Organization) RETURN o.name",
+		"MATCH (o:Organization) RETURN o",
 		nil,
 		neo4j.EagerResultTransformer,
 		neo4j.ExecuteQueryWithDatabase("neo4j"))
