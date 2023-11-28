@@ -2,12 +2,12 @@ package routing
 
 import "github.com/gin-gonic/gin"
 
-var projects map[string]map[string]func(c *gin.Context) = map[string]map[string]func(c *gin.Context){
+var Projects map[string]map[string]func(c *gin.Context) = map[string]map[string]func(c *gin.Context){
 	"/organizations/:orgId/projects": {
 		"GET":  listProjects,
 		"POST": createProject,
 	},
-	"/organizations/:orgId/projects/:id": {
+	"/organizations/:orgId/projects/:projId": {
 		"GET":    describeProject,
 		"PATCH":  nil,
 		"DELETE": nil,

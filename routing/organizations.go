@@ -3,18 +3,19 @@ package routing
 import (
 	"fmt"
 	"folk/proforma/core/actions/organization"
+	"folk/proforma/database"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
-var organizations map[string]map[string]func(c *gin.Context) = map[string]map[string]func(c *gin.Context){
+var Organizations map[string]map[string]func(c *gin.Context) = map[string]map[string]func(c *gin.Context){
 	"/organizations": {
 		"GET":  listOrganizations,
 		"POST": createOrganization,
 	},
-	"/organizations/:id": {
+	"/organizations/:orgId": {
 		"GET":    describeOrganization,
 		"DELETE": nil,
 		"PUT":    nil,
@@ -22,7 +23,12 @@ var organizations map[string]map[string]func(c *gin.Context) = map[string]map[st
 }
 
 func describeOrganization(c *gin.Context) {
-	id := c.Param("id")
+	db, err := database.Instance()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	id := c.Param("orgId")
 	result, err := neo4j.ExecuteQuery(c, db.Driver,
 		fmt.Sprintf("MATCH (o:Organization WHERE o.id = '%s') RETURN o", id),
 		nil,
@@ -31,12 +37,18 @@ func describeOrganization(c *gin.Context) {
 
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
 	}
 
 	c.JSON(http.StatusOK, result.Records)
 }
 
 func listOrganizations(c *gin.Context) {
+	db, err := database.Instance()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
 	result, err := neo4j.ExecuteQuery(c, db.Driver,
 		"MATCH (o:Organization) RETURN o",
 		nil,
@@ -45,6 +57,7 @@ func listOrganizations(c *gin.Context) {
 
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
 	}
 
 	c.JSON(http.StatusOK, result.Records)
