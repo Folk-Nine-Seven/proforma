@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"folk/proforma/database"
-	"folk/proforma/routing"
+	"folk/proforma/routes"
 	"net/http"
 	"os"
 
@@ -25,8 +25,8 @@ func main() {
 
 	public.GET("/", version)
 
-	initializePaths(public, routing.Organizations)
-	initializePaths(public, routing.Projects)
+	initializePaths(public, routes.Organizations)
+	initializePaths(public, routes.Projects)
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
