@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"folk/proforma/core/actions/organization"
 	"folk/proforma/database"
+	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/isaacp/alchem"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
@@ -32,6 +35,7 @@ func Describe(c *gin.Context) {
 }
 
 func List(c *gin.Context) {
+	time.Sleep(10 * time.Second)
 	db, err := database.Instance()
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
@@ -47,6 +51,13 @@ func List(c *gin.Context) {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
+
+	product, err := alchem.ConvertAndTransform(result.Records, "map(.Values.[].Props)")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(product)
 
 	c.JSON(http.StatusOK, result.Records)
 }
