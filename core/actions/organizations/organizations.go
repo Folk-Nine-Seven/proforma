@@ -1,6 +1,7 @@
-package organization
+package organizations
 
 import (
+	"folk/proforma/core/interfaces/database"
 	"folk/proforma/core/model"
 
 	"github.com/google/uuid"
@@ -27,6 +28,6 @@ func New(input NewOrganizationInput) *model.Organization {
 	}
 }
 
-func Get(organizationId string) model.Organization {
-	return model.Organization{}
+func GetOrganization(id string, dataStore database.OrganizationStore) (*model.Organization, error) {
+	return dataStore.Describe(id)
 }

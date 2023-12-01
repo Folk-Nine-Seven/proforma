@@ -1,10 +1,11 @@
 package organizations
 
 import (
+	"encoding/json"
 	"fmt"
-	"folk/proforma/core/actions/organization"
+	"folk/proforma/core/actions/organizations"
+	"folk/proforma/core/model"
 	"folk/proforma/database"
-	"log"
 	"net/http"
 	"time"
 
@@ -20,18 +21,14 @@ func Describe(c *gin.Context) {
 		return
 	}
 	id := c.Param("orgId")
-	result, err := neo4j.ExecuteQuery(c, db.Driver,
-		fmt.Sprintf("MATCH (o:Organization WHERE o.id = '%s') RETURN o", id),
-		nil,
-		neo4j.EagerResultTransformer,
-		neo4j.ExecuteQueryWithDatabase("neo4j"))
+	org, err := organizations.GetOrganization(id, db)
 
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, result.Records)
+	c.JSON(http.StatusOK, org)
 }
 
 func List(c *gin.Context) {
@@ -48,18 +45,25 @@ func List(c *gin.Context) {
 		neo4j.ExecuteQueryWithDatabase("neo4j"))
 
 	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, err)
+		c.IndentedJSON(http.StatusInternalServerError, "0")
 		return
 	}
 
-	product, err := alchem.ConvertAndTransform(result.Records, "map(.Values.[].Props)")
+	mutant, err := alchem.ConvertAndTransform[[]model.Organization](result.Records, "map(.Values.[].Props)")
 	if err != nil {
-		log.Fatal(err)
+		c.IndentedJSON(http.StatusInternalServerError, "1: "+err.Error())
+		return
 	}
 
-	fmt.Println(product)
+	var orgs []model.Organization
 
-	c.JSON(http.StatusOK, result.Records)
+	err = json.Unmarshal([]byte(mutant), &orgs)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, "2: "+err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, orgs)
 }
 
 func Create(c *gin.Context) {
@@ -74,7 +78,7 @@ func Create(c *gin.Context) {
 	session := driver.NewSession(c, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
 	defer session.Close(c)
 
-	newOrganization := organization.New(organization.NewOrganizationInput{})
+	newOrganization := organizations.New(organizations.NewOrganizationInput{})
 
 	if err := c.BindJSON(&newOrganization); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, err)
