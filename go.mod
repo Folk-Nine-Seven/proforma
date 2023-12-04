@@ -6,9 +6,11 @@ require (
 	cloud.google.com/go/secretmanager v1.11.4
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.4.0
-	github.com/isaacp/alchem v0.0.0-20231130044143-d45c0a8dde84
+	github.com/isaacp/alchem v0.0.0-20231204170633-2896b6cfd542
 	github.com/neo4j/neo4j-go-driver/v5 v5.15.0
 )
+
+replace github.com/isaacp/alchem => ../alchem
 
 require (
 	cloud.google.com/go/compute v1.23.3 // indirect
@@ -28,7 +30,7 @@ require (
 	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
-	github.com/itchyny/gojq v0.12.13 // indirect
+	github.com/itchyny/gojq v0.12.14 // indirect
 	github.com/itchyny/timefmt-go v0.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.6 // indirect

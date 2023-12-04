@@ -15,6 +15,8 @@ type (
 	}
 )
 
+var ds database.OrganizationStore
+
 func New(input NewOrganizationInput) *model.Organization {
 	projects := make(map[string]model.Project)
 	for _, project := range input.Projects {
@@ -28,6 +30,18 @@ func New(input NewOrganizationInput) *model.Organization {
 	}
 }
 
-func GetOrganization(id string, dataStore database.OrganizationStore) (*model.Organization, error) {
-	return dataStore.Describe(id)
+func GetOrganization(id string) (*model.Organization, error) {
+	return ds.Describe(id)
+}
+
+func GetOrganizations() ([]model.Organization, error) {
+	return ds.List()
+}
+
+func CreateOrganization(name, description string) (*model.Organization, error) {
+	return ds.Create(name, description)
+}
+
+func SetDataStore(dataStore database.OrganizationStore) {
+	ds = dataStore
 }

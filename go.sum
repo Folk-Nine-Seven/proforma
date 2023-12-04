@@ -86,8 +86,16 @@ github.com/googleapis/gax-go/v2 v2.12.0 h1:A+gCJKdRfqXkr+BIRGtZLibNXf0m1f9E4HG56
 github.com/googleapis/gax-go/v2 v2.12.0/go.mod h1:y+aIqrI5eb1YGMVJfuV3185Ts/D7qKpsEkdD5+I6QGU=
 github.com/isaacp/alchem v0.0.0-20231130044143-d45c0a8dde84 h1:irTctNXFWmUACJdU3jk6Q2hqJFjvCHEFWfs/sGPVtPM=
 github.com/isaacp/alchem v0.0.0-20231130044143-d45c0a8dde84/go.mod h1:Z+tk930vF0Cln719cLPoZJscYJmPHyBaYV36kSXt4z4=
+github.com/isaacp/alchem v0.0.0-20231201084609-d4701211ca62 h1:xQ47mynfO8Z6yXLoLNxdOkkn7HZb4ri69Nu9r5eX4PU=
+github.com/isaacp/alchem v0.0.0-20231201084609-d4701211ca62/go.mod h1:Z+tk930vF0Cln719cLPoZJscYJmPHyBaYV36kSXt4z4=
+github.com/isaacp/alchem v0.0.0-20231202035934-ee1842eae3a2 h1:Vt0y3rGRUnrSABXMf9c9mhlO72Mmt2jArM0Zy4w4D08=
+github.com/isaacp/alchem v0.0.0-20231202035934-ee1842eae3a2/go.mod h1:Z+tk930vF0Cln719cLPoZJscYJmPHyBaYV36kSXt4z4=
+github.com/isaacp/alchem v0.0.0-20231202060503-5d7dc11ef8bf h1:A/wc+sUbYDyBnu5m3GmV++gmdl/Jaxbw7UIewaqB3Cc=
+github.com/isaacp/alchem v0.0.0-20231202060503-5d7dc11ef8bf/go.mod h1:Z+tk930vF0Cln719cLPoZJscYJmPHyBaYV36kSXt4z4=
 github.com/itchyny/gojq v0.12.13 h1:IxyYlHYIlspQHHTE0f3cJF0NKDMfajxViuhBLnHd/QU=
 github.com/itchyny/gojq v0.12.13/go.mod h1:JzwzAqenfhrPUuwbmEz3nu3JQmFLlQTQMUcOdnu/Sf4=
+github.com/itchyny/gojq v0.12.14 h1:6k8vVtsrhQSYgSGg827AD+PVVaB1NLXEdX+dda2oZCc=
+github.com/itchyny/gojq v0.12.14/go.mod h1:y1G7oO7XkcR1LPZO59KyoCRy08T3j9vDYRV0GgYSS+s=
 github.com/itchyny/timefmt-go v0.1.5 h1:G0INE2la8S6ru/ZI5JecgyzbbJNs5lG1RcBqa7Jm6GE=
 github.com/itchyny/timefmt-go v0.1.5/go.mod h1:nEP7L+2YmAbT2kZ2HfSs1d8Xtw9LY8D2stDBckWakZ8=
 github.com/json-iterator/go v1.1.12 h1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnrnM=

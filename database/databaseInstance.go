@@ -6,6 +6,7 @@ import (
 
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
 	"cloud.google.com/go/secretmanager/apiv1/secretmanagerpb"
+	"github.com/gin-gonic/gin"
 )
 
 var instance *Neo4j
@@ -30,7 +31,7 @@ func Instance() (*Neo4j, error) {
 
 		password := string(secret.GetPayload().Data)
 
-		instance = New(context)
+		instance = New(&gin.Context{})
 		instance.Initialize(InitializeInput{
 			Uri:      "neo4j+s://1adaebe1.databases.neo4j.io:7687",
 			User:     "neo4j",
