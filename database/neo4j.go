@@ -76,8 +76,8 @@ func (db *Neo4j) Create(name, description string) (*model.Organization, error) {
 		return nil, err
 	}
 
-	retval = org.(model.Organization)
-	return retval, nil
+	retval := org.(model.Organization)
+	return &retval, nil
 }
 
 func (db *Neo4j) Delete(id string) error {
@@ -105,7 +105,11 @@ func (db *Neo4j) Describe(id string) (*model.Organization, error) {
 		return nil, err
 	}
 
-	return &orgs[0], nil
+	if len(orgs) > 0 {
+		return &orgs[0], nil
+	}
+
+	return nil, nil
 }
 
 func (db *Neo4j) List() ([]model.Organization, error) {
