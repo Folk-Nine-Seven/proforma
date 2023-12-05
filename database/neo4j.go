@@ -1,8 +1,8 @@
 package database
 
 import (
+	"context"
 	"fmt"
-	"folk/proforma/core/actions/organizations"
 	"folk/proforma/core/model"
 	"folk/proforma/database/queries"
 
@@ -50,34 +50,23 @@ func (db *Neo4j) VerifyConnectivity() error {
 	return db.Driver.VerifyConnectivity(db.context)
 }
 
-func (db *Neo4j) Create(name, description string) (*model.Organization, error) {
-	session := db.Driver.NewSession(db.context, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
-	defer session.Close(db.context)
+func (db *Neo4j) Create(newOrg model.Organization) (*model.Organization, error) {
+	ctx := context.Background()
+	session := db.Driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
+	defer session.Close(ctx)
 
-	newOrganization := organizations.New(organizations.NewOrganizationInput{})
-	c := (*gin.Context)(db.context)
-	if err := c.BindJSON(&newOrganization); err != nil {
-		return nil, err
-	}
-	org, err := session.ExecuteWrite(c, func(transaction neo4j.ManagedTransaction) (any, error) {
-		cmd := fmt.Sprintf(`CREATE (a:Organization) SET a.id = "%s" SET a.name = "%s" SET a.description = "%s"`, newOrganization.Id, newOrganization.Name, newOrganization.Description)
-		result, err := transaction.Run(c, cmd, nil)
+	_, err := session.ExecuteWrite(ctx, func(transaction neo4j.ManagedTransaction) (any, error) {
+		cmd := fmt.Sprintf(`CREATE (a:Organization) SET a.id = "%s" SET a.name = "%s" SET a.description = "%s"`, newOrg.Id, newOrg.Name, newOrg.Description)
+		result, err := transaction.Run(ctx, cmd, nil)
 		if err != nil {
 			return nil, err
 		}
-
-		if result.Next(c) {
-			return result.Record().Values[0], nil
-		}
-
-		return nil, result.Err()
+		return newOrg, result.Err()
 	})
 	if err != nil {
 		return nil, err
 	}
-
-	retval := org.(model.Organization)
-	return &retval, nil
+	return &newOrg, nil
 }
 
 func (db *Neo4j) Delete(id string) error {

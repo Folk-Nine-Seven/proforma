@@ -38,8 +38,8 @@ func GetOrganizations() ([]model.Organization, error) {
 	return ds.List()
 }
 
-func CreateOrganization(name, description string) (*model.Organization, error) {
-	return ds.Create(name, description)
+func CreateOrganization(org model.Organization) (*model.Organization, error) {
+	return ds.Create(org)
 }
 
 func SetDataStore(dataStore database.OrganizationStore) {

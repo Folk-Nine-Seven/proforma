@@ -2,7 +2,6 @@ package organizations
 
 import (
 	"folk/proforma/core/actions/organizations"
-	"folk/proforma/core/model"
 	"folk/proforma/database"
 	"net/http"
 
@@ -50,14 +49,12 @@ func Create(c *gin.Context) {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
-	var org model.Organization
-	err = c.BindJSON(org)
-	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, err)
+	newOrganization := organizations.New(organizations.NewOrganizationInput{})
+	if err := c.BindJSON(&newOrganization); err != nil {
 		return
 	}
 	organizations.SetDataStore(db)
-	o, err := organizations.CreateOrganization(org.Name, org.Description)
+	o, err := organizations.CreateOrganization(*newOrganization)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
