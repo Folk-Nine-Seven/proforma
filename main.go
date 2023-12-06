@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"folk/proforma/database"
+	"folk/proforma/gateways/neo4j"
 	"folk/proforma/routes"
 	"net/http"
 	"os"
@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	db, err := database.Instance()
+	db, err := neo4j.Instance()
 	if err != nil {
 		fmt.Printf("ERROR: %s\n", err)
 		return

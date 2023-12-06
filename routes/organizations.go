@@ -13,7 +13,7 @@ var Organizations map[string]map[string]func(c *gin.Context) = map[string]map[st
 	},
 	"/organizations/:orgId": {
 		"GET":    organizations.Describe,
-		"DELETE": nil,
+		"DELETE": organizations.Delete,
 		"PUT":    nil,
 	},
 }

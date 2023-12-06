@@ -1,4 +1,4 @@
-package queries
+package neo4j
 
 import "fmt"
 

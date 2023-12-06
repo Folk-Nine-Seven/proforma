@@ -2,21 +2,21 @@ package organizations
 
 import (
 	"folk/proforma/core/actions/organizations"
-	"folk/proforma/database"
+	"folk/proforma/gateways/neo4j"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Describe(c *gin.Context) {
-	db, err := database.Instance()
+	db, err := neo4j.Instance()
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
-	organizations.SetDataStore(db)
+
 	id := c.Param("orgId")
-	org, err := organizations.GetOrganization(id)
+	org, err := organizations.GetOrganization(id, db)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
@@ -29,13 +29,13 @@ func Describe(c *gin.Context) {
 }
 
 func List(c *gin.Context) {
-	db, err := database.Instance()
+	db, err := neo4j.Instance()
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
-	organizations.SetDataStore(db)
-	orgs, err := organizations.GetOrganizations()
+
+	orgs, err := organizations.GetOrganizations(db)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
@@ -44,7 +44,7 @@ func List(c *gin.Context) {
 }
 
 func Create(c *gin.Context) {
-	db, err := database.Instance()
+	db, err := neo4j.Instance()
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
@@ -53,12 +53,23 @@ func Create(c *gin.Context) {
 	if err := c.BindJSON(&newOrganization); err != nil {
 		return
 	}
-	organizations.SetDataStore(db)
-	o, err := organizations.CreateOrganization(*newOrganization)
+
+	orgs, err := organizations.CreateOrganization(*newOrganization, db)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
-	//orgs = append(orgs, *newOrganization)
-	c.IndentedJSON(http.StatusCreated, *o)
+	c.IndentedJSON(http.StatusCreated, *orgs)
+}
+
+func Delete(c *gin.Context) {
+	db, err := neo4j.Instance()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	id := c.Param("orgId")
+
+	organizations.DeleteOrganization(id, db)
 }

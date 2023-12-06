@@ -1,7 +1,7 @@
 package organizations
 
 import (
-	"folk/proforma/core/interfaces/database"
+	"folk/proforma/core/interfaces/stores"
 	"folk/proforma/core/model"
 
 	"github.com/google/uuid"
@@ -14,8 +14,6 @@ type (
 		Projects    []model.Project
 	}
 )
-
-var ds database.OrganizationStore
 
 func New(input NewOrganizationInput) *model.Organization {
 	projects := make(map[string]model.Project)
@@ -30,18 +28,18 @@ func New(input NewOrganizationInput) *model.Organization {
 	}
 }
 
-func GetOrganization(id string) (*model.Organization, error) {
-	return ds.Describe(id)
+func GetOrganization(id string, ds stores.OrganizationStore) (*model.Organization, error) {
+	return ds.DescribeOrganization(id)
 }
 
-func GetOrganizations() ([]model.Organization, error) {
-	return ds.List()
+func GetOrganizations(ds stores.OrganizationStore) ([]model.Organization, error) {
+	return ds.ListOrganizations()
 }
 
-func CreateOrganization(org model.Organization) (*model.Organization, error) {
-	return ds.Create(org)
+func CreateOrganization(org model.Organization, ds stores.OrganizationStore) (*model.Organization, error) {
+	return ds.CreateOrganization(org)
 }
 
-func SetDataStore(dataStore database.OrganizationStore) {
-	ds = dataStore
+func DeleteOrganization(id string, ds stores.OrganizationStore) error {
+	return ds.DeleteOrganization(id)
 }

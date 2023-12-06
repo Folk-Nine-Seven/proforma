@@ -14,6 +14,6 @@ var Projects map[string]map[string]func(c *gin.Context) = map[string]map[string]
 	"/organizations/:orgId/projects/:projId": {
 		"GET":    projects.Describe,
 		"PATCH":  nil,
-		"DELETE": nil,
+		"DELETE": projects.Delete,
 	},
 }
